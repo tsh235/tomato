@@ -40,5 +40,53 @@ class Task {
 }
 
 const task01 = new Task('Сверстать сайт', 55).incrementTimer();
+console.log('task01: ', task01);
 
-console.log(task01);
+// Модуль 4 урок 4
+
+class TomatoTimer {
+  constructor(
+      taskTime = 25,
+      shortBreakTime = 5,
+      longBreakTime = 15,
+      tasks = [],
+  ) {
+    this.taskTime = taskTime;
+    this.shortBreakTime = shortBreakTime;
+    this.longBreakTime = longBreakTime;
+    this.tasks = tasks;
+  }
+
+  addTask(task) {
+    this.tasks.push(task);
+  }
+
+  activateTask(id) {
+    const task = this.tasks.find((task) => task.id === id);
+    if (task) {
+      console.log(`Задача ${id} активирована`);
+      this.activeTask = task;
+      this.startTask();
+    } else {
+      throw new Error('Задача не найдена');
+    }
+  }
+
+  startTask() {
+    console.log('Задача запущена');
+
+    const activeTaskTime = setInterval(() => {
+      activeTaskTime.currentTime -= 1;
+
+      if (activeTaskTime.currentTime <= 0) {
+        this.completeTask();
+      }
+    }, 1000);
+
+    const activeTaskTimeCurrent = this.activeTask.time;
+    activeTaskTime.currentTime = activeTaskTimeCurrent;
+  }
+}
+
+const timer = new TomatoTimer();
+console.log('timer: ', timer);
