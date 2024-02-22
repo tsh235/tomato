@@ -43,14 +43,14 @@ class Task {
 
 class TomatoTimer {
   constructor({
-    taskTime = 25 * 60, // 1500c
-    smallPauseTime = 5 * 60, // 300c
-    bigPauseTime = 15 * 60, // 900c
+    taskTime = 25,
+    smallPauseTime = 5,
+    bigPauseTime = 10,
     tasks = [],
   } = {}) {
-    this.taskTime = taskTime;
-    this.smallPauseTime = smallPauseTime;
-    this.bigPauseTime = bigPauseTime;
+    this.taskTime = taskTime * 60;
+    this.smallPauseTime = smallPauseTime * 60;
+    this.bigPauseTime = bigPauseTime * 60;
     this.tasks = tasks;
     this.activeTask = null;
   }
@@ -83,7 +83,13 @@ class TomatoTimer {
         console.log('this.taskTime: ', this.taskTime);
         if (count >= this.taskTime) {
           clearInterval(timerId);
-          console.log('Stop');
+          if (count % 3 === 0) {
+            console.log('запускается большой перерыв');
+            this.bigBreak();
+          } else {
+            console.log('запускается короткий перерыв');
+            this.shortBreak();
+          }
         }
       }, 1000);
     } else {
@@ -91,12 +97,23 @@ class TomatoTimer {
     }
   }
 
+  bigBreak() {
+    console.log('большой перерыв');
+    setTimeout(() => {
+      console.log('запускаем задачу');
+      // this.startTimer();
+    }, this.bigPauseTime);
+  }
+
+  shortBreak() {
+    console.log('короткий перерыв');
+    setTimeout(() => {
+      console.log('запускаем задачу');
+      // this.startTimer();
+    }, this.smallPauseTime);
+  }
+
 /*
-*   Запустить задачу ()
-*    Когда таймер закачивается то, запускается таймер отдыха,
-*    если счетчик кратен 3-м, то запускается большой перерыв, иначе короткий
-*    Вызывается метод увеличения счетчика
-*
 *   4) Увеличить счетчик у задачи (принимает id задачи)
 *     Используя метод у задачи меняет её счётчик
 */
