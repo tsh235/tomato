@@ -27,7 +27,7 @@ class Task {
     this.#counter = +counter;
   }
 
-  incrementTimer() {
+  incrementCounter() {
     this.#counter++;
     return this;
   }
@@ -45,12 +45,12 @@ class TomatoTimer {
   constructor({
     taskTime = 25,
     smallPauseTime = 5,
-    bigPauseTime = 10,
+    bigPauseTime = 15,
     tasks = [],
   } = {}) {
-    this.taskTime = taskTime * 60;
-    this.smallPauseTime = smallPauseTime * 60;
-    this.bigPauseTime = bigPauseTime * 60;
+    this.taskTime = taskTime;
+    this.smallPauseTime = smallPauseTime;
+    this.bigPauseTime = bigPauseTime;
     this.tasks = tasks;
     this.activeTask = null;
   }
@@ -100,29 +100,37 @@ class TomatoTimer {
   bigBreak() {
     console.log('большой перерыв');
     setTimeout(() => {
-      console.log('запускаем задачу');
-      // this.startTimer();
+      console.log('увеличиваем счетчик на 1');
+      const taskID = this.activeTask.id;
+      this.increaseCounterByOne(taskID);
     }, this.bigPauseTime);
   }
 
   shortBreak() {
     console.log('короткий перерыв');
     setTimeout(() => {
-      console.log('запускаем задачу');
-      // this.startTimer();
+      console.log('увеличиваем счетчик на 1');
+      const taskID = this.activeTask.id;
+      this.increaseCounterByOne(taskID);
     }, this.smallPauseTime);
   }
 
-/*
-*   4) Увеличить счетчик у задачи (принимает id задачи)
-*     Используя метод у задачи меняет её счётчик
-*/
+  increaseCounterByOne(id) {
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].id === id) {
+        this.tasks[i].incrementCounter();
+        console.log(this.tasks[i]);
+      }
+    }
+  }
 }
 
-const task01 = new Task('Сверстать сайт', 15);
+const task01 = new Task('Сверстать сайт', 3);
+const task02 = new Task('Вытереть пыль', 2);
 console.log('task01: ', task01);
 
 const timer = new TomatoTimer(3);
 console.log('timer: ', timer);
 timer.addTask(task01);
+timer.addTask(task02);
 timer.activateTask(0);
