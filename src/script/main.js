@@ -17,19 +17,18 @@ document.querySelector('.button-importance')
       }
     });
 
-
 // Модуль 4 урок 3
 class Task {
   #name;
-  #timer;
-  constructor(timerName, timer = 0) {
+  #counter;
+  constructor(taskName, counter = 0) {
     this.id = Math.floor(Math.random() * 1000000000).toString();
-    this.#name = timerName.toString();
-    this.#timer = +timer;
+    this.#name = taskName.toString();
+    this.#counter = +counter;
   }
 
   incrementTimer() {
-    this.#timer++;
+    this.#counter++;
     return this;
   }
 
@@ -39,54 +38,74 @@ class Task {
   }
 }
 
-const task01 = new Task('Сверстать сайт', 55).incrementTimer();
-console.log('task01: ', task01);
 
 // Модуль 4 урок 4
 
 class TomatoTimer {
-  constructor(
-      taskTime = 25,
-      shortBreakTime = 5,
-      longBreakTime = 15,
-      tasks = [],
-  ) {
+  constructor({
+    taskTime = 25 * 60, // 1500c
+    smallPauseTime = 5 * 60, // 300c
+    bigPauseTime = 15 * 60, // 900c
+    tasks = [],
+  } = {}) {
     this.taskTime = taskTime;
-    this.shortBreakTime = shortBreakTime;
-    this.longBreakTime = longBreakTime;
+    this.smallPauseTime = smallPauseTime;
+    this.bigPauseTime = bigPauseTime;
     this.tasks = tasks;
+    this.activeTask = null;
   }
 
   addTask(task) {
+    console.log('Добавили задачу: ', task);
     this.tasks.push(task);
   }
 
   activateTask(id) {
-    const task = this.tasks.find((task) => task.id === id);
+    console.log(this.activeTask);
+    const task = this.tasks[id];
+    console.log('Активирую задачу:', task);
     if (task) {
-      console.log(`Задача ${id} активирована`);
       this.activeTask = task;
-      this.startTask();
+      console.log(this);
+      this.startTimer();
     } else {
       throw new Error('Задача не найдена');
     }
   }
 
-  startTask() {
-    console.log('Задача запущена');
-
-    const activeTaskTime = setInterval(() => {
-      activeTaskTime.currentTime -= 1;
-
-      if (activeTaskTime.currentTime <= 0) {
-        this.completeTask();
-      }
-    }, 1000);
-
-    const activeTaskTimeCurrent = this.activeTask.time;
-    activeTaskTime.currentTime = activeTaskTimeCurrent;
+  startTimer() {
+    if (this.activeTask) {
+      console.log('Запускаю задачу: ', this.activeTask);
+      let count = 0;
+      const timerId = setInterval(() => {
+        count++;
+        console.log('count: ', count);
+        console.log('this.taskTime: ', this.taskTime);
+        if (count >= this.taskTime) {
+          clearInterval(timerId);
+          console.log('Stop');
+        }
+      }, 1000);
+    } else {
+      throw new Error('Нет активной задачи');
+    }
   }
+
+/*
+*   Запустить задачу ()
+*    Когда таймер закачивается то, запускается таймер отдыха,
+*    если счетчик кратен 3-м, то запускается большой перерыв, иначе короткий
+*    Вызывается метод увеличения счетчика
+*
+*   4) Увеличить счетчик у задачи (принимает id задачи)
+*     Используя метод у задачи меняет её счётчик
+*/
 }
 
-const timer = new TomatoTimer();
+const task01 = new Task('Сверстать сайт', 15);
+console.log('task01: ', task01);
+
+const timer = new TomatoTimer(3);
 console.log('timer: ', timer);
+timer.addTask(task01);
+timer.activateTask(0);
